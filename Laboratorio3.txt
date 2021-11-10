@@ -74,18 +74,49 @@ and p.cod_prov <> p2.cod_prov;
 
 12)Seleccionar el codigo de los clientes que han realizado la mayor o la menor cantidad de ordenes. 
 
-select min(count(num_orden))
+
+select cod_cli, count(*) 
+from orden
+group by cod_cli
+having count(*) = (select min(count(num_orden))
 from orden o, clientes c
 where o.cod_cli = c.cod_cli 
-group by o.cod_cli;
-
-select max(count(num_orden))
+group by o.cod_cli)
+	or count(*) = (select max(count(num_orden))
 from orden o, clientes c
 where o.cod_cli = c.cod_cli 
-group by o.cod_cli;
+group by o.cod_cli);
+
+--Alternativamente
+ 
+select cod_cli, count(*) 
+from orden
+group by cod_cli
+having count(*) = (select min(count(num_orden))
+from orden o, clientes c
+where o.cod_cli = c.cod_cli 
+group by o.cod_cli)
+
+union
+
+select cod_cli, count(*) 
+from orden
+group by cod_cli
+having count(*) = (select max(count(num_orden))
+from orden o, clientes c
+where o.cod_cli = c.cod_cli 
+group by o.cod_cli)
+
+13) Seleccionar el nombre de los clientes que han realizado la mayor cantidad de ordenes
+
+select cod_cli,c.nombre, count(*)
+from orden o, clientes c
+where o.cod_cli = c.cod_cli 
+group by o.cod_cli, c.nombre
+having count(*) = (selec max(count(num_orden))
+		from orden o, clientes c
+		where o.cid_cli = c.cod_cli
+		group by o.cod_cli);
 
 
-
-
-
-
+14) Seleccionar 
