@@ -119,4 +119,37 @@ having count(*) = (selec max(count(num_orden))
 		group by o.cod_cli);
 
 
-14) Seleccionar 
+14) **
+15)**
+16) Seleccionar el nombre de los clientes que han ordenado absolutamente todos los productos
+
+Select C.*
+from clientes c
+where not exists (select 1 
+			from producto p
+			where not exists(select 1
+						from orden o, detalle d
+						where o.cod_cli = c.cod_cli
+						and p.cod_prod = d.cod_prod
+						and o.num_orden = d.num_orden));
+
+
+17) Seleccionar el nombre de los clientes que han ordenado absolutamente todos los productos de los proveedores de la ciudad de Montevideo.
+
+
+Select C.*
+from clientes c
+where not exists (select 1 
+			from producto p, proveedor prov
+			where prov.cod_prov = p.cod_prov
+			and prov.ciudad = 'MONTVIDEO'
+			and not exists(select 1
+						from orden o, detalle d
+						where o.cod_cli = c.cod_cli
+						and p.cod_prod = d.cod_prod
+						and o.num_orden = d.num_orden));
+
+
+
+
+
