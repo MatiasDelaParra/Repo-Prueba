@@ -1,0 +1,91 @@
+Laboratorio 3:
+
+1) Seleccionar la cantidad de clientes
+select count(*)
+from clientes;
+
+2)Seleccionar el mayor y el menor precio de los productos.
+select max(precio),min(precio) from producto;
+
+3)Seleccionar el promedio de los precios de los productos
+select avg(precio) from producto;
+
+4)seleccionar el numero de las ordenes cuando el precio del producto ordenado sea al precio mayor de todos los productos
+
+select num_orden
+from orden o, detalle d, producto p
+where o.num_orden = d.num_orden
+and p.cod_prod = d.cod_prod
+and p.precio = (select max(precio) from producto);
+
+5) Seleccionar la cantidad de clientes por ciudad
+
+Select count(*)
+from clientes
+group by ciudad;
+
+6) Seleccionar la cantidad de ordenes por dia en el periodo comprendido entre el 1 y el 20 de abril de este anio
+
+select fecha_orden, count(*)
+from orden 
+where fecha_entrega >= to_date('01/04/2017, 'dd/mm/yyyy')
+and fecha_entrega <= to_date('20/04/2017, 'dd/mm/yyyy')
+group by fecha_orden;
+
+7) Seleccionar la cantidad de ordenes que hay por dia, con su respectivo importe.
+
+select fecha_orden , count(distinct o.num_orden), sum(precio * d.cantidad)
+from detalle d, producto p, orden o
+where d.cod_prod = p.cod_prod
+and d.num_orden = o.num_orden
+group by fecha_orden;
+
+8) Seleccionar las ciudades en donde hay mas de 3 clientes.
+
+select ciudad, count(*)
+from clientes 
+group by ciudad
+having count(*) > 3; 
+
+9) Seleccionar el numero de las ordenes en donde se haya pedido mas de un producto
+
+select num_ordem, count(cantidad)
+from detalle 
+group by num_orden
+having count (cantidad) > 1;
+
+10) Seleccionar el numero de las ordenes cuando la cantidad total pedida es superior a 100 y no se pida menos de 30 unidades por producto. 
+
+11) Seleccionar el numero de las ordenes en donde se hayan pedido productos de mas de un proveedor. 
+
+select d.num_orden, count(distinct p.cod_prov) // Creo que el count aca no es necesario
+from detalle d, producto p
+where d.cod_prod = p.cod_prod
+group by d.num_orden
+count(distinct p.cod_prov) > 1;
+
+--Alternativamente
+select distinct num_orden 
+from detalle d, producto p, detalle d2, producto p2
+where d.cod_prod = p.cod_prod
+and d2.cod_prod = p2.cod_prod
+and d.num_orden = d2.num_orden
+and p.cod_prov <> p2.cod_prov;
+
+12)Seleccionar el codigo de los clientes que han realizado la mayor o la menor cantidad de ordenes. 
+
+select min(count(num_orden))
+from orden o, clientes c
+where o.cod_cli = c.cod_cli 
+group by o.cod_cli;
+
+select max(count(num_orden))
+from orden o, clientes c
+where o.cod_cli = c.cod_cli 
+group by o.cod_cli;
+
+
+
+
+
+
